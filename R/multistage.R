@@ -19,7 +19,7 @@ detibble <- function(data) {
 
 svydesign.default <- function(ids, probs = NULL, strata = NULL, variables = NULL, fpc = NULL,
                               data = NULL, nest = FALSE, check.strata = !nest, weights = NULL, pps = FALSE,
-                              variance = c("HT", "YG"), ...) {
+                              variance = c("HT", "YG", "HTwor"), ...) {
   data <- detibble(data)
 
   variance <- match.arg(variance)

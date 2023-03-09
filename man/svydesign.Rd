@@ -16,11 +16,11 @@ svydesign(ids, probs=NULL, strata = NULL, variables = NULL, fpc=NULL,
 data = NULL, nest = FALSE, check.strata = !nest, weights=NULL,pps=FALSE,...)
 \method{svydesign}{default}(ids, probs=NULL, strata = NULL, variables = NULL,
   fpc=NULL,data = NULL, nest = FALSE, check.strata = !nest, weights=NULL,
-  pps=FALSE,variance=c("HT","YG"),...)
-\method{svydesign}{imputationList}(ids, probs = NULL, strata = NULL, variables = NULL, 
+  pps=FALSE,variance=c("HT","YG","HTwor"),...)
+\method{svydesign}{imputationList}(ids, probs = NULL, strata = NULL, variables = NULL,
     fpc = NULL, data, nest = FALSE, check.strata = !nest, weights = NULL, pps=FALSE,
      ...)
-\method{svydesign}{character}(ids, probs = NULL, strata = NULL, variables = NULL, 
+\method{svydesign}{character}(ids, probs = NULL, strata = NULL, variables = NULL,
     fpc = NULL, data, nest = FALSE, check.strata = !nest, weights = NULL, pps=FALSE,
     dbtype = "SQLite", dbname, ...)
 }
@@ -42,7 +42,7 @@ data = NULL, nest = FALSE, check.strata = !nest, weights=NULL,pps=FALSE,...)
     within strata}
   \item{check.strata}{If \code{TRUE}, check that clusters are nested in
     strata}.
-  \item{pps}{\code{"brewer"} to use Brewer's approximation for PPS 
+  \item{pps}{\code{"brewer"} to use Brewer's approximation for PPS
     sampling without replacement. \code{"overton"} to use
     Overton's approximation. An object of class \code{\link{HR}} to use the Hartley-Rao approximation. An
     object of class \code{\link{ppsmat}} to use the Horvitz-Thompson estimator.}
@@ -59,19 +59,19 @@ data = NULL, nest = FALSE, check.strata = !nest, weights=NULL,pps=FALSE,...)
    \code{fpc}, \code{weights} and \code{probs} arguments are
    optional. If these variables are specified they must not have any
    missing values.
-   
+
    By default, \code{svydesign} assumes that all PSUs, even those in
    different strata, have a unique value of the \code{id}
    variable. This allows some data errors to be detected. If your PSUs
    reuse the same identifiers across strata then set \code{nest=TRUE}.
-   
-   
+
+
    The finite population correction (fpc) is used to reduce the variance when
    a substantial fraction of the total population of interest has been
    sampled. It may not be appropriate if the target of inference is the
    process generating the data rather than the statistics of a
    particular finite population.
-   
+
    The finite population correction can be specified either as the total
    population size in each stratum or as the fraction of the total
    population that has been sampled. In either case the relevant
@@ -79,11 +79,11 @@ data = NULL, nest = FALSE, check.strata = !nest, weights=NULL,pps=FALSE,...)
    from a population stratum of size 500 can be specified as 500 or as
    100/500=0.2.  The exception is for PPS sampling without replacement, where the
    sampling probability (which will be different for each PSU) must be used.
-   
+
    If population sizes are specified but not sampling probabilities or
    weights, the sampling probabilities will be computed from the
-   population sizes assuming simple random sampling within strata. 
-   
+   population sizes assuming simple random sampling within strata.
+
    For multistage sampling the \code{id} argument should specify a
    formula with the cluster identifiers at each stage.  If subsequent
    stages are stratified \code{strata} should also be specified as a
@@ -104,8 +104,8 @@ data = NULL, nest = FALSE, check.strata = !nest, weights=NULL,pps=FALSE,...)
    replacement is supported only with \code{pps="brewer"}, or by
    giving the full joint probability matrix using
    \code{\link{ppsmat}}. [Cluster sampling is supported by all
-   methods, but not subsampling within clusters].  
-   
+   methods, but not subsampling within clusters].
+
    The \code{dim}, \code{"["}, \code{"[<-"} and na.action methods for
    \code{survey.design} objects operate on the dataframe specified by
    \code{variables} and ensure that the design information is properly
@@ -140,7 +140,7 @@ loading a saved object.
 
 The database interface does not attempt to modify the underlying
 database and so can be used with read-only permissions on the database.
- 
+
 
 If \code{data} is an \code{imputationList} object (from the "mitools"
 package), \code{svydesign} will return a \code{svyimputationList} object
