@@ -295,7 +295,9 @@ print.summary.pps <- function(x, ..., varnames = TRUE) {
 
 ppsvar <- function(x, design) {
   postStrata <- design$postStrata
+
   est <- design$variance ##Yates-Grundy or Horvitz-Thompson
+
   if (!is.null(postStrata)) {
     for (psvar in postStrata) {
       if (inherits(psvar, "greg_calibration")) {
@@ -315,17 +317,29 @@ ppsvar <- function(x, design) {
       }
     }
   }
+
   dcheck <- design$dcheck
-  if (length(dcheck) != 1) stop("Multistage not implemented yet")
-  rval <- switch(est, HT = htvar.matrix(rowsum(x, dcheck[[1]]$id, reorder = FALSE), dcheck[[1]]$dcheck),
-               YG = ygvar.matrix(rowsum(x, dcheck[[1]]$id, reorder = FALSE), dcheck[[1]]$dcheck),
-               stop("can't happen"))
+
+  if (length(dcheck) != 1)
+    stop("Multistage not implemented yet")
+
+  rval <- switch(
+    est,
+    HT = htvar.matrix(
+      rowsum(x, dcheck[[1]]$id, reorder = FALSE),
+      dcheck[[1]]$dcheck
+    ),
+    YG = ygvar.matrix(
+      rowsum(x, dcheck[[1]]$id, reorder = FALSE),
+      dcheck[[1]]$dcheck
+    ),
+    stop("can't happen")
+  )
+
   rval
 }
 
 svytotal.pps <- function(x, design, na.rm = FALSE, deff = FALSE, ...) {
-
-
   if (inherits(x, "formula")) {
     ## do the right thing with factors
     mf <- model.frame(x, model.frame(design), na.action = na.pass)
