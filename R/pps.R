@@ -385,7 +385,23 @@ svytotal.pps <- function(x, design, na.rm = FALSE, deff = FALSE, ...) {
   N <- sum(1 / design$prob)
   total <- colSums(x / as.vector(design$prob), na.rm = na.rm)
   class(total) <- "svystat"
-  attr(total, "var") <- v <- ppsvar(x / design$prob, design)
+
+  if (design$variance == "HTwor") {
+    converted_design = convert_survey_design(design)
+
+    v = total_variance(
+      x,
+      psu_index = converted_design$psu_index,
+      psu_probability = converted_design$psu_probability,
+      psu_size = converted_design$psu_size,
+      ssu_probability = converted_design$ssu_probability,
+      joint_probability = converted_design$joint_probability
+    )
+  } else {
+    v <- ppsvar(x, design)
+  }
+  attr(total, "var") <- v
+
   attr(total, "statistic") <- "total"
 
   if (is.character(deff) || deff) {
@@ -450,7 +466,24 @@ svymean.pps <- function(x, design, na.rm = FALSE, deff = FALSE, ...) {
   psum <- sum(pweights)
   average <- colSums(x * pweights / psum)
   x <- sweep(x, 2, average)
-  v <- ppsvar(x * pweights / psum, design)
+
+  if (design$variance == "HTwor") {
+    converted_design = convert_survey_design(design)
+
+    original_x = x + average
+
+    v = mean_variance(
+      x = original_x,
+      mean = average,
+      psu_index = converted_design$psu_index,
+      psu_probability = converted_design$psu_probability,
+      psu_size = converted_design$psu_size,
+      ssu_probability = converted_design$ssu_probability,
+      joint_probability = converted_design$joint_probability
+    )
+  } else {
+    v <- ppsvar(x * pweights / psum, design)
+  }
   attr(average, "var") <- v
   attr(average, "statistic") <- "mean"
   class(average) <- "svystat"
