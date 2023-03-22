@@ -158,12 +158,17 @@ print.ppsmat <- function(x, ...) {
   invisible(x)
 }
 
-pps_design.ppsmat <- function(method, ids, strata = NULL, probs = NULL, fpc = NULL, variables = variables,
-                   subset, data, call = sys.call(), variance = "HT", ...) {
+pps_design.ppsmat <- function(
+    method, ids, strata = NULL, probs = NULL, fpc = NULL, variables = variables,
+    subset, data, call = sys.call(), variance = "HT", ...
+) {
+  if (length(ids[[2]]) > 3)
+    stop("More than two-stage PPS sampling not supported")
 
-  if (length(ids[[2]]) > 1) stop("Multistage PPS sampling not supported")
-  rval <- svydesign(ids = ids, strata = strata, weights = NULL, variables = variables,
-                probs = probs, fpc = fpc, data = data, pps = "other")
+  rval <- svydesign(
+    ids = ids, strata = strata, weights = NULL, variables = variables,
+    probs = probs, fpc = fpc, data = data, pps = "other"
+  )
 
   deltacheck <- pi2Dcheck(method$pij, method$tolerance)
   rval$variance <- variance
