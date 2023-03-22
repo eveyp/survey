@@ -28,6 +28,49 @@ test_that("means work", {
   expect_equal(mean["variance"], 2.07, ignore_attr = "names", tolerance = 0.01)
 })
 
+test_that("svydesign works", {
+  expect_snapshot_value(
+    svydesign(
+      ids = ~psu_index + I(1:10),
+      fpc = ~psu_probability + ssu_probability,
+      data = sarndal$data,
+      variance = "HTwor",
+      pps = ppsmat(sarndal$joint_probability)
+    ),
+    style = "serialize"
+  )
+})
+
+test_that("svytotal works", {
+  design = svydesign(
+    ids = ~psu_index + I(1:10),
+    fpc = ~psu_probability + ssu_probability,
+    data = sarndal$data,
+    variance = "HTwor",
+    pps = ppsmat(sarndal$joint_probability)
+  )
+
+  total = svytotal(~ x, design)
+
+  expect_equal(as.numeric(total), 2775)
+  expect_equal(attr(total, "var"), 281958.7, tolerance = 0.0001)
+})
+
+test_that("svymean works", {
+  design = svydesign(
+    ids = ~psu_index + I(1:10),
+    fpc = ~psu_probability + ssu_probability,
+    data = sarndal$data,
+    variance = "HTwor",
+    pps = ppsmat(sarndal$joint_probability)
+  )
+
+  mean = svymean(~ x, design)
+
+  expect_equal(as.numeric(mean), 9.9107, tolerance = 0.00001)
+  expect_equal(attr(mean, "var"), 2.07, tolerance = 0.001)
+})
+
 library(survey)
 data("election")
 
