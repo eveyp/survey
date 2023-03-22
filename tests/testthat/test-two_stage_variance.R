@@ -1,25 +1,13 @@
-x <- c(8, 10, 13, 12, 11, 8, 2, 7, 16, 10)
-
-psu_index <- c("11", "11", "5", "5", "20", "20", "48", "48", "14", "14")
-
-psu_probability <- rep(0.1, 5)
-
-psu_size <- c(6, 5, 5, 5, 7)
-
-ssu_probability <- unlist(purrr::map(psu_size, ~ rep(2 / .x, 2)))
-
-joint_prob <- (5 * (5 - 1)) / (50 * (50 - 1))
-joint_probability <- matrix(rep(joint_prob, 25), ncol = 5)
-diag(joint_probability) <- psu_probability
+data("sarndal")
 
 test_that("totals work", {
   total <- total_with_variance(
-    x,
-    psu_index,
-    psu_probability,
-    psu_size,
-    ssu_probability,
-    joint_probability
+    sarndal$data$x,
+    sarndal$data$psu_index,
+    sarndal$data$psu_probability[1:5],
+    sarndal$data$psu_size[seq(1, 9, 2)],
+    sarndal$data$ssu_probability,
+    sarndal$joint_probability
   )
 
   expect_equal(total["total"], 2775, ignore_attr = "names")
@@ -28,12 +16,12 @@ test_that("totals work", {
 
 test_that("means work", {
   mean <- mean_with_variance(
-    x,
-    psu_index,
-    psu_probability,
-    psu_size,
-    ssu_probability,
-    joint_probability
+    sarndal$data$x,
+    sarndal$data$psu_index,
+    sarndal$data$psu_probability[1:5],
+    sarndal$data$psu_size[seq(1, 9, 2)],
+    sarndal$data$ssu_probability,
+    sarndal$joint_probability
   )
 
   expect_equal(mean["mean"], 9.9107, ignore_attr = "names", tolerance = 0.00001)
