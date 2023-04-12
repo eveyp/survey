@@ -3,7 +3,7 @@ Title: Analysis of Complex Survey Samples
 Description: Summary statistics, two-sample tests, rank tests, generalised linear models, cumulative link models, Cox models, loglinear models, and general maximum pseudolikelihood estimation for multistage stratified, cluster-sampled, unequally weighted survey samples. Variances by Taylor series linearisation or replicate weights. Post-stratification, calibration, and raking. Two-phase subsampling designs. Graphics. PPS sampling without replacement. 
 Version: 5.0.0.9000
 Authors@R: c(
-  person("Eve", "Perry", email = "eve.perry@ucsf.edu", role = "cre"),
+  person("Eve", "Perry", email = "eve.perry@ucsf.edu", role = "ctb"),
   person("Thomas", "Lumley", email = "t.lumley@auckland.ac.nz", role = c("aut", "cre")))
 License: GPL-2 | GPL-3
 Depends: R (>= 3.5.0), grid, methods, Matrix, survival
